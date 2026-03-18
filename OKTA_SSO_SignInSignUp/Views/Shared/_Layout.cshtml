@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            @Html.ActionLink("ASP.NET MVC 4.8", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
+                            @Html.ActionLink("All Users", "Index", "User", null, new { @class = "nav-link" })
+                        </li>
+                    }
+
+                    @if ((User.IsInRole("Manager")) || (User.IsInRole("Admin")))
+                    {
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
+                            @Html.ActionLink("All Courses", "Index", "Course", null, new { @class = "nav-link" })
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Student"))
+                    {
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
+                            @Html.ActionLink("My Courses", "MyCourse", "Course", null, new { @class = "nav-link" })
+                        </li>
+                    }
+                </ul>
+
+                <!-- RIGHT: Auth links -->
+                <ul class="navbar-nav ml-auto">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="nav-item d-flex align-items-center">
+                            @{
+                                // Prefer FirstName from Session if available; fallback to Identity.Name
+                                var helloName = (Session["FirstName"] as string);
+                                if (string.IsNullOrWhiteSpace(helloName))
+                                {
+                                    helloName = User.Identity.Name;
+                                }
+                            }
+                            <span class="navbar-text text-white me-3">Hello @helloName</span>
+                        </li>
+
+                        <!-- Profile Link -->
+                        <li class="nav-item">
+                            @Html.ActionLink("Profile", "Profile", "Account", null, new { @class = "nav-link" })
+                        </li>
+
+                        <!-- Logout (conditional based on login method) -->
+                        <li class="nav-item">
+                            @{
+                                var loginMethod = Session["LoginMethod"]?.ToString();
+                            }
+                            @if (loginMethod == "Okta")
+                            {
+                                @* Okta SSO Logout *@
+                                using (Html.BeginForm("OktaLogout", "Account", FormMethod.Post, new { style = "display:inline-block; margin:0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-link nav-link" style="border:none; background:none; padding:8px 16px; color:rgba(255,255,255,.55); text-decoration:none;">
+                                        Logout
+                                    </button>
+                                }
+                            }
+                            else
+                            {
+                                @* Forms Authentication Logout *@
+                                @Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "nav-link" })
+                            }
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Login" ? "active" : "")">
+                            @Html.ActionLink("Sign In", "Login", "Account", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Register" ? "active" : "")">
+                            @Html.ActionLink("Create Account", "Register", "Account", null, new { @class = "nav-link" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

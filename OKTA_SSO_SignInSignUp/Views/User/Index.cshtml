@@ -1,0 +1,77 @@
+﻿@model IEnumerable<OKTA_SSO_SignInSignUp.Models.User>
+@{
+    ViewBag.Title = "Users";
+}
+
+<section class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">All Users</h3>
+
+        <!-- (Optional) Add user button -->
+        @* @Html.ActionLink("Add User", "Create", "User", null, new { @class = "btn btn-sm btn-primary" }) *@
+    </div>
+
+    <!-- Optional: quick search (client-side) -->
+    <div class="mb-3">
+        <input id="userSearch" class="form-control" type="text" placeholder="Search by name, username or email..." />
+    </div>
+
+    <div class="table-responsive">
+        <table id="usersTable" class="table table-striped table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var u in Model ?? Enumerable.Empty<OKTA_SSO_SignInSignUp.Models.User>())
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@($"{u.FirstName} {u.LastName}".Trim())</td>
+                            <td>@u.Username</td>
+                            <td>@u.Email</td>
+                            <td>
+                                <span>@u.Role</span>
+                            </td>
+                            <td>@u.CreatedDate</td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", "User", new { id = u.Id }, new { @class = "btn btn-sm btn-outline-primary mr-1" })
+                                    @Html.ActionLink("Delete", "Delete", "User", new { id = u.Id }, new { @class = "btn btn-sm btn-outline-danger" })
+                                </td>                            
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+    // simple client-side filter by text
+    (function () {
+        var search = document.getElementById('userSearch');
+        var table = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+
+        if (!search || !table) return;
+
+        search.addEventListener('input', function () {
+            var q = (this.value || '').toLowerCase();
+            Array.prototype.forEach.call(table.rows, function (row) {
+                var text = row.innerText.toLowerCase();
+                row.style.display = text.indexOf(q) > -1 ? '' : 'none';
+            });
+        });
+    })();
+    </script>
+}

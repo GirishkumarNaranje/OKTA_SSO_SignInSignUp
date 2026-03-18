@@ -1,0 +1,72 @@
+﻿/* ===== Register page refinements ===== */
+
+/* 1) Spacing between fields */
+.auth-card .form-group {
+    margin-bottom: 0.10rem; /* space after each input */
+}
+
+    .auth-card .form-group label {
+        margin-top: 0.65rem; /* space BEFORE every new label */
+    }
+
+/* 2) Label styling: slightly darker & clearer */
+.auth-card label {
+    color: #343a40; /* Bootstrap's dark */
+    font-weight: 600; /* semi-bold for contrast */
+    font-size: 0.92rem;
+}
+
+/* 3) Inputs: consistent height & rounded corners */
+.auth-card .form-control {
+    height: 44px; /* slightly shorter than btn-lg */
+    border-radius: 8px;
+}
+
+    .auth-card .form-control::placeholder {
+        color: #adb5bd; /* softer placeholder color */
+    }
+
+    /* Optional: subtle focus ring for accessibility */
+    .auth-card .form-control:focus {
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+        border-color: #86b7fe;
+    }
+
+/* 4) CTA button: full width + a bit lower in height */
+.auth-submit {
+    width: 100%; /* full width (mirrors btn-block) */
+    padding: 0.55rem 1rem; /* reduces height vs btn-lg default */
+    font-size: 0.95rem;
+    border-radius: 8px;
+    margin-top: 1rem; /* spacing above the button */
+}
+
+/* Optional: make the public ID note a touch smaller & lighter */
+.auth-card small.text-muted {
+    font-size: 0.85rem;
+    color: #6c757d !important;
+}
+
+.auth-submit.btn-primary {
+    background-color: #2ea44f;
+    border-color: #2ea44f;
+}
+
+.auth-submit.btn-primary:hover {
+    background-color: #268a43;
+    border-color: #268a43;
+}
+
+/* Force full width like the Create Account button */
+.auth-card form {
+    width: 100%;
+}
+
+.auth-card .form-group {
+    width: 100%;
+}
+
+.auth-card .form-control {
+    width: 100%;
+    display: block;
+}

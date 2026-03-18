@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "User Profile";
+}
+
+<link href="~/Content/SIte/Site.css" rel="stylesheet" />
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            <h2 class="mb-4">
+                <i class="fas fa-user-circle"></i> User Profile
+            </h2>
+            <hr />
+
+            <!-- User Info Card -->
+            <div class="card auth-card shadow-sm mb-4">
+                <div class="card-header register-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user"></i> Welcome, @(Session["FirstName"] ?? User.Identity.Name)!
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> @User.Identity.Name</p>
+                            <p><strong>First Name:</strong> @(Session["FirstName"] ?? "N/A")</p>
+                            <p><strong>Last Name:</strong> @(Session["LastName"] ?? "N/A")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Authenticated:</strong>
+                                <span class="badge badge-success">@User.Identity.IsAuthenticated</span>
+                            </p>
+                            <p>
+                                <strong>Login Method:</strong>
+                                <span class="badge badge-info">@(Session["LoginMethod"] ?? "Unknown")</span>
+                            </p>
+                            <p><strong>Auth Type:</strong> @User.Identity.AuthenticationType</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claims from Okta (only for Okta users) -->
+            @if (Session["LoginMethod"]?.ToString() == "Okta" && User.Identity.IsAuthenticated)
+            {
+                <div class="card auth-card shadow-sm">
+                    <div class="card-header register-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-key"></i> Your Claims (from Okta)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th style="width: 40%;">Claim Type</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var claim in ((System.Security.Claims.ClaimsIdentity)User.Identity).Claims)
+                                    {
+                                        <tr>
+                                            <td><code>@claim.Type</code></td>
+                                            <td>@claim.Value</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
